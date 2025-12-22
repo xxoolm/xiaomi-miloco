@@ -471,7 +471,6 @@ class MIoTCameraInstance:
             # raw audio
             if self._callbacks.get(f"decode_pcm.{channel}", None):
                 self._decoders[channel].push_audio_frame(frame_data)
-            self._decoders[channel].push_audio_frame(frame_data)
             a_callbacks = self._callbacks.get(f"raw_audio.{channel}", {})
             for a_callback in list(a_callbacks.values()):
                 asyncio.run_coroutine_threadsafe(
@@ -511,10 +510,10 @@ def _load_dynamic_lib():
         # linux
         if machine in ("x86_64", "amd64"):
             # x86_64
-            lib_path = lib_path / "linux" / "x86_64"
-        elif machine in ("aarch64", "arm64"):
+            lib_path = lib_path / system / "x86_64"
+        elif machine in ("arm64", "aarch64"):
             # arm 64 bit
-            lib_path = lib_path / "linux" / "arm64"
+            lib_path = lib_path / system / "arm64"
         elif machine.startswith("arm"):
             # arm 32 bit
             lib_path = lib_path / "linux" / "arm"
@@ -526,10 +525,10 @@ def _load_dynamic_lib():
         # macOS
         if machine == "x86_64":
             # Intel Mac
-            lib_path = lib_path / "macos" / "x86_64"
-        elif machine in ("arm64",):
+            lib_path = lib_path / system / "x86_64"
+        elif machine in ("arm64", "aarch64"):
             # Apple M series
-            lib_path = lib_path / "macos" / "arm64"
+            lib_path = lib_path / system / "arm64"
         else:
             raise RuntimeError(f"unsupported macOS architecture: {machine}")
         lib_path = lib_path / "libmiot_camera_lite.dylib"
@@ -537,10 +536,10 @@ def _load_dynamic_lib():
     elif system == "windows":
         if machine in ("x86_64", "amd64"):
             # x86_64
-            lib_path = lib_path / "windows" / "x86_64"
-        elif machine in ("arm64",):
+            lib_path = lib_path / system / "x86_64"
+        elif machine in ("arm64", "aarch64"):
             # ARM64
-            lib_path = lib_path / "windows" / "arm64"
+            lib_path = lib_path / system / "arm64"
         else:
             raise RuntimeError(f"Unsupported Windows architecture: {machine}")
         lib_path = lib_path / "miot_camera_lite.dll"
